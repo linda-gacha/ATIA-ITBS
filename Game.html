@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chronicles of Exoplanet Exploration - Jeu</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden; /* Pour cacher le débordement */
+            background: url('./images/background.png') no-repeat center center fixed;
+            background-size: cover;
+        }
+
+        canvas {
+            display: block;
+            margin: 0 auto;
+            border: 2px solid #fff;
+        }
+
+        .score, .mission, .level {
+            position: absolute;
+            color: white;
+            font-size: 20px;
+            z-index: 10;
+        }
+
+        .score {
+            top: 10px;
+            left: 10px;
+        }
+
+        .mission {
+            top: 10px;
+            right: 10px;
+        }
+
+        .level {
+            top: 40px;
+            left: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="score">Score: <span id="score">0</span></div>
+    <div class="mission">Mission: Collect 5 Space Gems!</div>
+    <div class="level">Niveau: <span id="level">1</span></div>
+    <canvas id="gameCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Ballon
+        const balloon = {
+            x: canvas.width / 2 - 25,
+            y: canvas.height - 60,
+            radius: 25, // Rayon du ballon
+            gravity: 0.5,
+            jumpStrength: -12,
+            velocityY: 0,
+            speed: 8,
+            jump: function() {
+                if (this.y >= canvas.height - this.radius) { // Permettre le saut seulement si le ballon est au sol
+                    this.velocityY = this.jumpStrength;
+                }
+            },
+            move: function(direction) {
+                this.x += direction * this.speed;
+                if (this.x - this.radius < 0) this.x = this.radius; // Limite gauche
+                if (this.x + this.radius > canvas.width) this.x = canvas.width - this.radius; // Limite droite
+            },
+            draw: function() {
+                ctx.fillStyle = '#ff0000'; // Couleur du ballon
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2); // Dessiner le ballon
+                ctx.fill();
+                ctx.closePath();
+            },
+            update: function() {
+                this.velocityY += this.gravity;
+                this.y += this.velocityY;
+
+                // Gérer les limites du sol
+                if (this.y + this.radius > canvas.height) {
+                    this.y = canvas.height - this.radius;
+                    this.velocityY = 0;
+                }
+            }
+        };
+
+        // Objets à collecter
+        const gems = [];
+        let score = 0;
+        let gemsCollected = 0;
+        let missionCompleted = false;
+        let level = 1;
+        let targetGems = 5; 
+        let experience = 0;
+        let gemSpeed = 2;
+
+        // Missions possibles
+        const missions = [
+            "Collect 5 Space Gems!",
+            "Collect 10 Space Gems!",
+            "Collect 3 Space Gems in 15 seconds!",
+            "Collect 7 Space Gems!",
+            "Collect all the Space Gems before they disappear!",
+        ];
+        let currentMission = missions[0]; // Mission actuelle
+
+        function createGem() {
+            const x = Math.random() * (canvas.width - 30);
+            gems.push({ x: x, y: 0, width: 30, height: 30 });
+        }
+
+        function drawGems() {
+            ctx.fillStyle = '#ffcc00'; // Couleur des gemmes
+            gems.forEach(gem => {
+                ctx.fillRect(gem.x, gem.y, gem.width, gem.height);
+            });
+        }
+
+        function updateGems() {
+            gems.forEach(gem => {
+                gem.y += gemSpeed; // Les gemmes descendent
+            });
+            for (let i = gems.length - 1; i >= 0; i--) {
+                if (gems[i].y > canvas.height) {
+                    gems.splice(i, 1);
+                }
+            }
+        }
+
+        function checkGemCollection() {
+            for (let i = gems.length - 1; i >= 0; i--) {
+                const gem = gems[i];
+                if (balloon.x - balloon.radius < gem.x + gem.width &&
+                    balloon.x + balloon.radius > gem.x &&
+                    balloon.y + balloon.radius > gem.y) {
+                    gems.splice(i, 1); // Retirer la gemme collectée
+                    gemsCollected++;
+                    score += 10; // Augmenter le score
+                    document.getElementById('score').innerText = score;
+
+                    // Vérifier si la mission est accomplie
+                    if (gemsCollected === targetGems) {
+                        missionCompleted = true; 
+                        experience += 100; 
+                    }
+                }
+            }
+        }
+
+        function updateLevel() {
+            if (experience >= 300) {
+                level++;
+                gemSpeed += 1; // Augmente la vitesse des gemmes
+                experience = 0; 
+                targetGems += 5; 
+                document.getElementById('level').innerText = level;
+                missionCompleted = false; 
+                gemsCollected = 0; 
+                alert(`Nouveau Niveau! Vous êtes maintenant au niveau ${level}.`);
+            }
+        }
+
+        function selectNewMission() {
+            const randomIndex = Math.floor(Math.random() * missions.length);
+            currentMission = missions[randomIndex];
+            targetGems = parseInt(currentMission.match(/\d+/)[0]); // Extraire le nombre de gemmes à collecter
+            document.querySelector('.mission').innerText = `Mission: ${currentMission}`; // Mettre à jour la mission affichée
+        }
+
+        function update() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            balloon.update();
+            balloon.draw();
+            drawGems();
+            updateGems();
+            checkGemCollection();
+
+            if (missionCompleted) {
+                ctx.fillStyle = 'white';
+                ctx.font = '30px Arial';
+                ctx.fillText('Mission Accomplie!', canvas.width / 2 - 100, canvas.height / 2);
+                updateLevel(); 
+                selectNewMission(); // Sélectionner une nouvelle mission
+                return;
+            }
+
+            requestAnimationFrame(update);
+        }
+
+        window.addEventListener('keydown', (event) => {
+            if (event.code === 'Space') {
+                balloon.jump();
+            }
+            if (event.code === 'ArrowLeft') {
+                balloon.move(-1);
+            }
+            if (event.code === 'ArrowRight') {
+                balloon.move(1);
+            }
+        });
+
+        setInterval(createGem, 2000); // Crée une gemme toutes les 2 secondes
+        selectNewMission(); // Initialiser la première mission
+        update();
+    </script>
+
+</body>
+</html>

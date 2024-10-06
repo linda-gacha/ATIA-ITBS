@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description" content="Explore distant worlds with Exoplanet Exploration. Learn about unique galaxies and their fascinating features.">
+    <meta name="keywords" content="galaxies, space exploration, astronomy, Milky Way, Andromeda, Hubble, galaxies videos">
+
+    <!-- Preconnect for fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Orbitron', sans-serif;
+            background: url('./images/background.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            line-height: 1.6;
+            height: 100vh;
+            overflow-x: hidden;
+        }
+
+        header {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 5px 0; /* Reduced padding for a slimmer navbar */
+        }
+
+        /* Navbar */
+        .navbar {
+            padding: 0.5rem 1rem; /* Adjusted padding */
+        }
+
+        .navbar-brand {
+            font-size: 1.2em; /* Reduced font size */
+            font-weight: 700;
+            color: #f0f0f0;
+        }
+
+        .navbar-nav .nav-link {
+            font-size: 0.9em; /* Reduced font size */
+            color: #fff;
+            padding: 5px 10px; /* Reduced padding */
+            transition: background-color 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+        }
+
+        header h1 {
+            font-size: 2.5em; /* Reduced header size */
+            color: #f0f0f0;
+            text-transform: uppercase;
+            animation: fadeIn 2s ease-in;
+            margin: 15px 0; /* Adjusted margin */
+        }
+
+        section {
+            padding: 40px;
+            text-align: center;
+        }
+
+        .info-section {
+            background-color: rgba(0, 0, 0, 0.7);
+            margin: 20px auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 1200px;
+            animation: slideUp 1s ease-in-out;
+        }
+
+        .galaxy {
+            margin: 20px 0;
+            padding: 20px;
+        }
+
+        .details {
+            font-size: 1.1em; /* Slightly reduced font size */
+            line-height: 1.6;
+            text-align: left;
+            padding: 20px;
+            color: #f0f0f0;
+        }
+
+        footer {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            text-align: center;
+            color: #fff;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Music -->
+    <audio autoplay loop>
+        <source src="music/space-music.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- Navbar -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">Exoplanet Explorer</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="quiz.html">Quiz</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="Game.html">Game</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <h1>Welcome to Exoplanet Exploration</h1>
+    </header>
+
+    <!-- Main Section -->
+    <section>
+        <div class="info-section">
+            <div class="planet">
+                <img src="./images/mercury.png" alt="Kepler-16b">
+            </div>
+            <div class="details">
+                <h2>01. Kepler-16b</h2>
+                <p>Kepler-16b orbits two stars, making it a circumbinary planet — something like a real-world "Tatooine" from Star Wars.</p>
+                <h5>ORBIT PERIOD: <span>229 Days</span></h5>
+                <h5>Distance from Earth: <span>~200 light-years</span></h5>
+                <h5>Mass: <span>0.33 Jupiter masses</span></h5>
+                <h5>Temperature: <span>-73°C to -101°C</span></h5>
+                <h5>Atmosphere: <span>Hydrogen, Helium</span></h5>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <div class="planet">
+                <img src="./images/venus.png" alt="Proxima Centauri b">
+            </div>
+            <div class="details">
+                <h2>02. Proxima Centauri b</h2>
+                <p>Proxima Centauri b is the closest known exoplanet to Earth and orbits within its star’s habitable zone.</p>
+                <h5>ORBIT PERIOD: <span>11.2 days</span></h5>
+                <h5>Distance from Earth: <span>4.24 light-years</span></h5>
+                <h5>Mass: <span>1.17 Earth masses</span></h5>
+                <h5>Temperature: <span>-39°C</span></h5>
+                <h5>Atmosphere: <span>Unknown</span></h5>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h2>Space Exploration Videos</h2>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/jnlJ2aAzGSg" title="Space Exploration" frameborder="0" allowfullscreen></iframe>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/PD-rC9ojM5Y" title="Amazing Galaxies" frameborder="0" allowfullscreen></iframe>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/pSHVbLPWA28" title="The Universe" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2024 ATIA ITBS | All Rights Reserved</p>
+    </footer>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Swiper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+</body>
+</html>

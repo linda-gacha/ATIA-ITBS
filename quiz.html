@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exoplanet Quiz</title>
+    <link rel="icon" href="./images/exo.png">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #0c0c2a;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .quiz-container {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #00ffff;
+            margin-bottom: 30px;
+        }
+        .question {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .option {
+            background-color: #1a1a4a;
+            border: none;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .option:hover {
+            background-color: #2a2a6a;
+        }
+        .option.selected {
+            background-color: #00ffff;
+            color: #0c0c2a;
+        }
+        .feedback {
+            margin-top: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .btn {
+            display: block;
+            margin: 20px auto 0;
+            background-color: #00ffff;
+            color: #0c0c2a;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #00cccc;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background-color: #1a1a4a;
+            margin-top: 20px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .progress {
+            width: 0;
+            height: 100%;
+            background-color: #00ffff;
+            transition: width 0.5s ease-in-out;
+        }
+        .result {
+            text-align: center;
+            font-size: 1.2em;
+        }
+        .result-text{
+            padding: 10px;
+        }
+        .hidden {
+            display: none;
+        }
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .result-image {
+            max-width: 60%;
+            height: auto;
+            margin-top: 20px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h1>Exoplanet Explorer Quiz</h1>
+        <div id="question" class="question"></div>
+        <div id="options" class="options"></div>
+        <div id="feedback" class="feedback"></div>
+        <button id="next-btn" class="btn hidden">Next Question</button>
+        <div class="progress-bar">
+            <div id="progress" class="progress"></div>
+        </div>
+        <div id="result" class="result hidden">
+            <p id="result-text"></p>
+            <img id="result-image" class="result-image" alt="Result Image" src="images/quiz.png" />
+        </div>
+        <div id="end-buttons" class="btn-container hidden">
+            <button id="retry-btn" class="btn">Retry</button>
+            <button id="back-btn" class="btn">Back</button>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                question: "What is an exoplanet?",
+                options: [
+                    "A planet outside our solar system",
+                    "A planet inside our solar system",
+                    "A star that looks like a planet",
+                    "A moon orbiting Jupiter"
+                ],
+                correct: 0
+            },
+            {
+                question: "Which of these methods is NOT used to detect exoplanets?",
+                options: [
+                    "Transit method",
+                    "Radial velocity method",
+                    "Direct imaging",
+                    "Smell detection"
+                ],
+                correct: 3
+            },
+            {
+                question: "What type of exoplanet is often called a 'Hot Jupiter'?",
+                options: [
+                    "A small, rocky planet close to its star",
+                    "A gas giant far from its star",
+                    "A gas giant very close to its star",
+                    "An icy planet in a distant orbit"
+                ],
+                correct: 2
+            },
+            {
+                question: "Which space telescope, launched in 2018, is specifically designed to search for exoplanets?",
+                options: [
+                    "Hubble Space Telescope",
+                    "James Webb Space Telescope",
+                    "Transiting Exoplanet Survey Satellite (TESS)",
+                    "Spitzer Space Telescope"
+                ],
+                correct: 2
+            },
+            {
+                question: "What is the 'habitable zone' around a star?",
+                options: [
+                    "The area where humans can live without spacesuits",
+                    "The region where liquid water could exist on a planet's surface",
+                    "The zone where planets can form",
+                    "The area where alien life has been discovered"
+                ],
+                correct: 1
+            },
+            {
+                question: "Which of these is NOT a factor in determining a planet's potential habitability?",
+                options: [
+                    "Distance from its star",
+                    "Presence of a magnetic field",
+                    "Color of the planet",
+                    "Atmosphere composition"
+                ],
+                correct: 2
+            },
+            {
+                question: "What is the Kepler Space Telescope famous for?",
+                options: [
+                    "Taking the first photo of a black hole",
+                    "Discovering thousands of exoplanets",
+                    "Landing on Mars",
+                    "Studying the Sun's corona"
+                ],
+                correct: 1
+            },
+            {
+                question: "Which of these exoplanets is known for potentially having diamond rain?",
+                options: [
+                    "Kepler-16b",
+                    "WASP-12b",
+                    "Gliese 581g",
+                    "55 Cancri e"
+                ],
+                correct: 3
+            },
+            {
+                question: "What is a 'Super-Earth'?",
+                options: [
+                    "A planet larger than Jupiter",
+                    "An exoplanet between Earth and Neptune in size",
+                    "A hypothetical future state of Earth",
+                    "A planet with stronger gravity than Earth"
+                ],
+                correct: 1
+            },
+            {
+                question: "Which exoplanet is nicknamed 'Earth's Twin' due to its similar size and position in its solar system?",
+                options: [
+                    "Proxima Centauri b",
+                    "TRAPPIST-1e",
+                    "Kepler-452b",
+                    "HD 40307g"
+                ],
+                correct: 2
+            }
+        ];
+
+
+        let currentQuestion = 0;
+        let score = 0;
+        let shuffledQuestions;
+
+        const questionEl = document.getElementById('question');
+        const optionsEl = document.getElementById('options');
+        const feedbackEl = document.getElementById('feedback');
+        const nextBtn = document.getElementById('next-btn');
+        const progressEl = document.getElementById('progress');
+        const resultEl = document.getElementById('result');
+        const endButtonsEl = document.getElementById('end-buttons');
+        const retryBtn = document.getElementById('retry-btn');
+        const backBtn = document.getElementById('back-btn');
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function initializeQuiz() {
+            shuffledQuestions = [...quizData];
+            shuffleArray(shuffledQuestions);
+            currentQuestion = 0;
+            score = 0;
+            loadQuestion();
+            updateProgress();
+            hideElement(resultEl);
+            hideElement(endButtonsEl);
+            showElement(questionEl);
+            showElement(optionsEl);
+        }
+
+        function loadQuestion() {
+            const question = shuffledQuestions[currentQuestion];
+            questionEl.textContent = question.question;
+
+            optionsEl.innerHTML = '';
+            question.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.classList.add('option');
+                button.addEventListener('click', () => selectOption(index));
+                optionsEl.appendChild(button);
+            });
+
+            feedbackEl.textContent = '';
+            hideElement(nextBtn);
+        }
+
+        function selectOption(index) {
+            const options = optionsEl.children;
+            for (let i = 0; i < options.length; i++) {
+                options[i].classList.remove('selected');
+                options[i].disabled = true;
+            }
+            options[index].classList.add('selected');
+
+            const correct = shuffledQuestions[currentQuestion].correct;
+            if (index === correct) {
+                score++;
+                feedbackEl.textContent = 'Correct! 🎉';
+                gsap.from(feedbackEl, {y: -20, opacity: 0, duration: 0.5});
+            } else {
+                feedbackEl.textContent = `Incorrect. The correct answer was: ${shuffledQuestions[currentQuestion].options[correct]}`;
+                gsap.from(feedbackEl, {y: -20, opacity: 0, duration: 0.5});
+            }
+
+            if (currentQuestion === shuffledQuestions.length - 1) {
+                setTimeout(showResult, 1500);
+            } else {
+                showElement(nextBtn);
+            }
+        }
+
+        nextBtn.addEventListener('click', () => {
+            currentQuestion++;
+            loadQuestion();
+            updateProgress();
+        });
+
+        function updateProgress() {
+            const progress = ((currentQuestion + 1) / shuffledQuestions.length) * 100;
+            progressEl.style.width = `${progress}%`;
+        }
+
+        function showResult() {
+            hideElement(questionEl);
+            hideElement(optionsEl);
+            hideElement(feedbackEl);
+            hideElement(nextBtn);
+            showElement(resultEl);
+
+            const scorePercentage = (score / shuffledQuestions.length) * 100;
+
+            //resultEl.textContent = `Quiz completed! Your score: ${score} out of ${shuffledQuestions.length}`;
+
+            const resultText = `Quiz completed! Your score: ${score} out of ${shuffledQuestions.length}`;
+            document.getElementById('result-text').textContent = resultText;
+
+            const resultImage = document.getElementById('result-image');
+            if (scorePercentage >= 80) {
+                resultImage.src = "images/best.png";
+            } else if (scorePercentage >= 50) {
+                resultImage.src = "images/quiz.png";
+            } else {
+                resultImage.src = "images/failed.png";
+            }
+            showElement(resultImage);
+            showElement(endButtonsEl);
+
+            gsap.from(resultEl, {scale: 0.5, opacity: 0, duration: 0.5});
+        }
+
+        retryBtn.addEventListener('click', initializeQuiz);
+        backBtn.addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+
+        function hideElement(element) {
+            element.classList.add('hidden');
+        }
+
+        function showElement(element) {
+            element.classList.remove('hidden');
+        }
+
+        initializeQuiz();
+    </script>
+</body>
+</html>
